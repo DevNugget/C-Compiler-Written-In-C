@@ -1,9 +1,29 @@
+/**
+ * @mainpage C Compiler Written In C
+ * 
+ * @section Introduction
+ * This is a project I have started working on to learn how compilers work and get more familiar with how C works.
+ * 
+ * @section Milestones
+ * <hr>
+ * @date 25-11-2024
+ * 
+ * Created a lexer function with minimal features. Capable of generating these tokens: INT_KEYWORD, RETURN_KEYWORD, IDENTIFIER, L_PARAN, R_PARAN, L_BRACE, R_BRACE, INT_LITERAL, SEMICOLON, UNKNOWN
+ * <hr>
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-
+/**
+ * @brief Enum representing different types of tokens.
+ * 
+ * This enum defines the possible token types that can be recognized 
+ * during lexing, including keywords, identifiers, literals, and 
+ * symbols like parentheses and braces.
+ */
 typedef enum {
     INT_KEYWORD,
     RETURN_KEYWORD,
@@ -17,16 +37,31 @@ typedef enum {
     UNKNOWN
 } TokenType;
 
+/**
+ * @brief Structure representing a single token.
+ * 
+ * A Token structure contains two fields: a token type from the 
+ * TokenType enum and a value which is a string representing the 
+ * token's content.
+ */
 typedef struct {
     TokenType type;
     char* value;
 } Token;
 
+/**
+ * @brief Structure representing a list of tokens.
+ * 
+ * The TokenList structure holds an array of Token objects, along 
+ * with its size (the number of tokens in the list) and its capacity 
+ * (the maximum number of tokens the list can hold before resizing).
+ */
 typedef struct {
     Token* tokens;
     size_t size;
     size_t capacity;
 } TokenList;
+
 
 TokenList* create_token_list(size_t init_capacity);
 void free_token_list(TokenList* list);
@@ -63,6 +98,10 @@ int main(int argc, char** argv) {
 
 /**
  * @brief Creates a new token list with a given initial capacity.
+ * 
+ * Allocates memory for a TokenList and its tokens array, initializes 
+ * the list size to 0, and sets the capacity to the specified value.
+ * 
  * @param init_capacity The initial capacity of the token list.
  * @return A pointer to the newly created TokenList.
  */
@@ -78,6 +117,11 @@ TokenList* create_token_list(size_t init_capacity) {
 
 /**
  * @brief Frees the memory used by a token list.
+ * 
+ * This function iterates through the tokens in the list, freeing the 
+ * memory for each token's value. After that, it frees the memory for 
+ * the tokens array and the TokenList struct itself.
+ * 
  * @param list A pointer to the TokenList to be freed.
  */
 void free_token_list(TokenList* list) {
@@ -91,6 +135,10 @@ void free_token_list(TokenList* list) {
 
 /**
  * @brief Prints the tokens in a token list.
+ * 
+ * This function iterates through the tokens in the list and prints 
+ * their type and value to the standard output in a readable format.
+ * 
  * @param list A pointer to the TokenList to be printed.
  */
 void print_tokens(TokenList *list) {
@@ -101,6 +149,12 @@ void print_tokens(TokenList *list) {
 
 /**
  * @brief Adds a token to the token list.
+ * 
+ * This function checks if there is enough capacity in the list to add 
+ * a new token. If not, it reallocates memory to double the capacity. 
+ * Then, it creates a new token, assigns it a type and value, and 
+ * appends it to the list.
+ * 
  * @param list A pointer to the TokenList to which the token will be added.
  * @param type The type of the token to be added.
  * @param value The value of the token to be added.
@@ -128,6 +182,11 @@ Token* add_token(TokenList* list, TokenType type, const char* value) {
 
 /**
  * @brief Lexes a source file into a list of tokens.
+ * 
+ * This function reads a file character by character, classifies the 
+ * characters into tokens (such as keywords, identifiers, literals, 
+ * and symbols), and stores them in a dynamically allocated TokenList.
+ * 
  * @param filename The name of the file to be lexed.
  * @return A pointer to the TokenList containing the lexed tokens.
  * @note Returns NULL if the file cannot be opened.
